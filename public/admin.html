@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理 | LibraryCirculationSystem</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDKs (必要最小限) -->
+    <script defer src="/__/firebase/12.4.0/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/12.4.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/12.4.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="firebase-config.js"></script>
+    <script defer src="firebase-init.js"></script>
+
+    <!-- アプリ用スクリプト -->
+    <script defer src="guard.js"></script>
+    <script defer src="users.js"></script>
+    <script defer src="circulation.js"></script>
+    <script defer src="admin.js"></script>
+  </head>
+  <body>
+    <!-- デスクトップ用ヘッダーナビ -->
+    <header class="header-nav">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <h1>📚 Library System</h1>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">
+            <span class="nav-icon">🔍</span>
+            <span class="nav-text">検索</span>
+          </a>
+          <a href="circulation.html" class="nav-link">
+            <span class="nav-icon">📱</span>
+            <span class="nav-text">貸出・返却</span>
+          </a>
+          <a href="mypage.html" class="nav-link">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">マイページ</span>
+          </a>
+          <a href="admin.html" class="nav-link active">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">管理</span>
+          </a>
+        </nav>
+        <div class="nav-actions">
+          <button class="logout-btn" onclick="signOut()">ログアウト</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- モバイル用ボトムナビ -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon">🔍</span>
+        <span class="bottom-nav-text">検索</span>
+      </a>
+      <a href="circulation.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon">📱</span>
+        <span class="bottom-nav-text">貸出・返却</span>
+      </a>
+      <a href="mypage.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon">👤</span>
+        <span class="bottom-nav-text">マイページ</span>
+      </a>
+      <a href="admin.html" class="bottom-nav-item active">
+        <span class="bottom-nav-icon">⚙️</span>
+        <span class="bottom-nav-text">管理</span>
+      </a>
+    </nav>
+
+    <main class="container">
+      <h1>🛠 管理者画面</h1>
+
+      <!-- アクセスキー入力（管理UIの保護） -->
+      <div id="adminAccessSection" class="section">
+        <h2>管理者アクセス</h2>
+        <p class="muted">管理者権限のあるアカウントでログインし、アクセスキーを入力してください。</p>
+        <div class="form-row">
+          <input id="adminAccessKey" type="password" placeholder="アクセスキー" aria-label="アクセスキー">
+          <button id="adminAccessBtn">解錠</button>
+        </div>
+        <div id="adminAccessMsg" class="hint"></div>
+      </div>
+
+      <!-- 管理コンテンツ（アクセスキー検証後に表示） -->
+      <div id="adminContent" style="display:none">
+        <h2>利用者管理</h2>
+        <div class="section">
+          <div>
+            <h3>利用者の追加</h3>
+            <div class="form-row">
+              <input id="userId" type="text" placeholder="ユーザーID（学籍番号等）" aria-label="ユーザーID">
+              <input id="userName" type="text" placeholder="氏名" aria-label="氏名">
+              <select id="userRole" aria-label="区分">
+                <option value="student">生徒</option>
+                <option value="staff">職員</option>
+              </select>
+              <button onclick="addUser()">追加</button>
+            </div>
+            <div id="userAddMessage" class="hint"></div>
+          </div>
+          <div style="margin-top:12px;">
+            <h3>利用者検索</h3>
+            <div class="form-row">
+              <input id="userSearchTerm" type="text" placeholder="ユーザーID/氏名で検索" aria-label="利用者検索">
+              <button onclick="searchUsers()">検索</button>
+            </div>
+            <div id="usersContainer"></div>
+          </div>
+          <div style="margin-top:12px;">
+            <h3>ロール変更</h3>
+            <div class="form-row">
+              <input id="roleTargetUserId" type="text" placeholder="対象ユーザーID" aria-label="対象ユーザーID">
+              <select id="roleSelect" aria-label="ロール">
+                <option value="student">生徒</option>
+                <option value="staff">職員</option>
+              </select>
+              <button onclick="updateUserRole()">更新</button>
+            </div>
+            <div id="roleUpdateMsg" class="hint"></div>
+          </div>
+        </div>
+
+        <h2>統計・レポート</h2>
+        <div class="section">
+          <div class="form-row">
+            <button onclick="refreshStats()">統計を更新</button>
+          </div>
+          <div id="statsContainer"></div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
