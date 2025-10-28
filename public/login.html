@@ -16,7 +16,7 @@
 
     <script defer src="login.js"></script>
   </head>
-  <body class="auth-body auth-simple">
+  <body>
     <div class="auth-wrapper">
       <div class="auth-container">
         <!-- ヘッダー（シンプル） -->
@@ -29,13 +29,13 @@
         <div class="auth-card">
           <form class="auth-form" onsubmit="return false;">
             <div class="form-group">
-              <label for="loginUserId" class="form-label">ユーザーID</label>
+              <label for="loginEmail" class="form-label">メールアドレス</label>
               <div class="input-wrapper">
                 <input 
-                  id="loginUserId" 
+                  id="loginEmail" 
                   type="text" 
-                  placeholder="ユーザーID" 
-                  autocomplete="username"
+                  placeholder="メールアドレス" 
+                  autocomplete="email"
                   class="auth-input"
                   required
                 >

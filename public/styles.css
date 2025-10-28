@@ -598,7 +598,7 @@ input:focus-visible, select:focus-visible {
 /* Auth pages */
 .auth-wrapper { display: grid; place-items: center; min-height: 100vh; }
 .auth-card {
-  width: 100%; max-width: 720px; background: #fff; border: 1px solid var(--border);
+  max-width: 720px; background: #fff; border: 1px solid var(--border);
   border-radius: 12px; padding: 20px 20px 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 .auth-card h1 { margin: 0 0 16px; }
@@ -613,7 +613,7 @@ input:focus-visible, select:focus-visible {
 .input-row button.btn-link { background: transparent; color: var(--primary); border: none; padding: 0 6px; cursor: pointer; }
 .input-row button.btn-link:hover { text-decoration: underline; }
 
-.form-actions { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-top: 12px; }
+.form-actions { gap: 10px; align-items: center; justify-content: space-between; margin-top: 12px; }
 .small { font-size: 12px; color: var(--muted); }
 
 @media (max-width: 520px) {
@@ -635,6 +635,45 @@ input:focus-visible, select:focus-visible {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
+/* --- fix: signup select not clickable --- */
+.input-wrapper::before {
+  pointer-events: none; /* overlayをクリック不可に */
+}
+
+.auth-select {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 16px 8px; /* auth-inputと同等の高さに */
+  font-size: 16px;
+  background: transparent;
+  color: var(--text);
+  position: relative;
+  z-index: 1; /* 擬似要素より前面へ */
+  width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Safari対策: select親のtransformがドロップダウンを阻害しないように */
+.input-wrapper:has(select) {
+  transform: none !important;
+  overflow: visible; /* ドロップダウンの描画を妨げない */
+}
+
+.input-wrapper:has(select):hover:not(:focus-within) {
+  transform: none !important;
+}
+
+@supports not selector(:has(*)) {
+  /* :hasが使えない古いブラウザでは全入力ラッパーのtransformを無効化 */
+  .input-wrapper { transform: none !important; }
+  .input-wrapper:hover:not(:focus-within) { transform: none !important; }
+}
+/* --- end fix --- */
 
 /* スマホ対応のレスポンシブデザイン */
 @media (max-width: 768px) {
@@ -1043,7 +1082,6 @@ input:focus-visible, select:focus-visible {
 
 .auth-wrapper {
   width: 100%;
-  max-width: 420px;
   position: relative;
   z-index: 1;
   min-height: -webkit-fill-available;
@@ -1362,7 +1400,6 @@ input:focus-visible, select:focus-visible {
 .auth-options {
   text-align: center;
   padding: 20px 0;
-  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
 .link-btn {
@@ -1668,4 +1705,12 @@ body.auth-simple.auth-body::before { display: none; }
 
 .auth-simple .auth-logo { animation: none; filter: none; }
 
-.auth-simple * { animation: none !important; }
+.auth-simple * { animation: none; }
+
+/* --- utility: visibility --- */
+.is-hidden { display: none !important; }
+
+/* --- manual input section styles --- */
+.manual-section { border-top: 2px solid #eee; padding-top: 20px; }
+.manual-summary { cursor: pointer; color: var(--muted); }
+.manual-inner { margin-top: 15px; }

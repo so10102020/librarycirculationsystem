@@ -1,4 +1,4 @@
-(function () {
+x(function () {
   'use strict';
 
   const LOAN_PERIOD_DAYS = 14;

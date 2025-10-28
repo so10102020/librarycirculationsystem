@@ -11,8 +11,8 @@
     el.style.color = isError ? '#c62828' : '#2e7d32';
   }
 
-  async function resolveEmailByUserId(userId){
-    const snap = await db().collection('users').where('user_id', '==', userId).limit(1).get();
+  async function resolveEmailByUserId(email){
+    const snap = await db().collection('users').where('email', '==', userId).limit(1).get();
     if (snap.empty) throw new Error('ユーザーが見つかりません。');
     const u = snap.docs[0].data() || {};
     if (!u.email) throw new Error('このユーザーにはメールが登録されていません。');
@@ -20,7 +20,7 @@
   }
 
   async function login(){
-    const userId = ($("loginUserId")?.value || '').trim();
+    const email = ($("loginEmail")?.value || '').trim();
     const password = ($("loginPassword")?.value || '').trim();
     if (!userId || !password){ setMsg('ユーザーIDとパスワードを入力してください。', true); return; }
     setMsg('ログイン中...');
